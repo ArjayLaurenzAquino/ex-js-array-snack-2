@@ -77,9 +77,49 @@ console.log(areAuthorsAdults)
 
 const ages = authors.map(a => a.age)
 const agesSum = ages.reduce((acc, curr) => acc + curr, 0)
-const etàMedia = somma / authors.length
+const etàMedia = agesSum / authors.length
 console.log(ages)
 console.log(`La media delle età è ${etàMedia}`)
 
 
 //Snack 5
+
+async function fetchJson(url) {
+    const response = await fetch(url)
+    const obj = await response.json()
+    return obj
+}
+
+async function getBooks(ids) {
+
+    try {
+        const bookApi = ids.map(id => fetchJson(`http://localhost:3333/books/${id}`))
+        const booksList = await Promise.all(bookApi)
+        return console.log(booksList)
+    } catch (error) {
+        throw new Error(error.message)
+    }
+}
+
+getBooks([2, 13, 7, 21, 19])
+
+// Snack 6
+
+const areThereAvailableBooks = books.some(b => b.available)
+console.log(`Ci sono libri diponibili: ${areThereAvailableBooks}`)
+
+const booksByPrice = books.sort((a, b) => {
+    if (a.available === b.available) {
+        return parseInt(b.price) - parseInt(a.price)
+    }
+    return b.available - a.available
+})
+console.log(booksByPrice)
+
+// Snack 7
+
+//const tagCounts = books.reduce((acc, curr) => {}, {})
+
+const booksAllTags = books[0].tags.concat(books[1].tags, books[2].tags, books[3].tags)
+const booksTags = [...new Set(booksAllTags)]
+console.log(booksTags)
